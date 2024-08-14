@@ -1,14 +1,14 @@
 # CRUD_clientes_PHP
 Este projeto é um CRUD (Create, Read, Update, Delete) simples de gerenciamento de clientes, desenvolvido em PHP e MySQL. O sistema permite adicionar, visualizar, editar e excluir registros de clientes, com funcionalidades como verificação de e-mail duplicado e sistema de mensagens para feedback ao usuário.
 
-##Requisitos
+## Requisitos
 
 - Servidor Web: Apache ou Nginx.
 - PHP: Versão 7.4 ou superior.
 - Banco de Dados: MySQL ou MariaDB.
 - Extensões PHP: mysqli, mbstring.
 
-##Instalação
+## Instalação
 
 - Clone o repositório:
 - git clone https://github.com/felipeemoliveira01/CRUD_clientes_PHP.git 
@@ -17,7 +17,7 @@ Este projeto é um CRUD (Create, Read, Update, Delete) simples de gerenciamento 
 - Coloque o projeto na pasta raiz do seu servidor web. 
 - Acesse o sistema via navegador. 
 
-##Funcionalidades
+## Funcionalidades
 
 - Cadastro de clientes com validação de e-mail. 
 - Edição e exclusão de registros. 
