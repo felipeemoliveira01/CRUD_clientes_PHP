@@ -2,14 +2,30 @@
 require_once('php_action/db_link.php');  // Inclui o arquivo de conexão com o banco de dados 
 require_once('requests/header.php');     // Inclui o cabeçalho da página 
 require_once('requests/mensagem.php');   // Inclui o arquivo de mensagens para exibição de feedback ao usuário
-?>
 
+// Verifica se há uma palavra de pesquisa
+$palavra = isset($_GET['palavra']) ? $_GET['palavra'] : '';
+
+// Consulta SQL para filtrar resultados com base na palavra de pesquisa
+if (!empty($palavra)) {
+    $sql = "SELECT * FROM clientes WHERE nome LIKE '%$palavra%' OR sobrenome LIKE '%$palavra%' OR email LIKE '%$palavra%'";
+} else {
+    $sql = "SELECT * FROM clientes";
+}
+
+$result = mysqli_query($conect, $sql);  // Executa a consulta e armazena o resultado
+?>
 
 <div class="container">
     <div class="row">
         <div class="col s12 m8 push-m2">
             <h3 class="light center-align">CLIENTES</h3> 
-           </div>
+            <div class="input-field col s12">
+                <form action="" method="get">
+                    <input type="text" name="palavra" id="palavra" placeholder="Digite o nome, sobrenome ou email">
+                    <button type="submit" class="btn red darken-4">Procurar</button>
+                </form>
+            </div>
             <table class="striped centered">
                 <thead>
                     <tr>
@@ -22,21 +38,17 @@ require_once('requests/mensagem.php');   // Inclui o arquivo de mensagens para e
                 </thead>
                 <tbody>
                     <?php
-                        // Consulta para selecionar todos os registros da tabela 'clientes'
-                        $sql = "SELECT * FROM clientes";
-                        $result = mysqli_query($conect, $sql);  // Executa a consulta e armazena o resultado
-
-                        // Verifica se há registros no banco de dados
-                        if(mysqli_num_rows($result) > 0){
+                    // Verifica se há registros no banco de dados
+                    if(mysqli_num_rows($result) > 0){
 
                         // Loop para exibir cada registro encontrado
                         while($data = mysqli_fetch_array($result)){
                     ?>
                     <tr>
-                        <td><?php echo $data['nome']?></td>           <!-- Exibe o nome do cliente -->
-                        <td><?php echo $data['sobrenome']?></td>      <!-- Exibe o sobrenome do cliente -->
-                        <td><?php echo $data['idade']?></td>          <!-- Exibe a idade do cliente -->
-                        <td><?php echo $data['email']?></td>          <!-- Exibe o email do cliente -->
+                        <td><?php echo $data['nome']?></td>
+                        <td><?php echo $data['sobrenome']?></td>
+                        <td><?php echo $data['idade']?></td>
+                        <td><?php echo $data['email']?></td>
                         <td>
                             <!-- Link para editar o registro, passando o ID do cliente via GET -->
                             <a href="editar.php?id=<?php echo $data['id']?>" class="btn-floating orange darken-3"><i class="material-icons">edit</i></a>
@@ -63,10 +75,7 @@ require_once('requests/mensagem.php');   // Inclui o arquivo de mensagens para e
                     }else{ ?>
                     <!-- Exibe uma linha vazia se não houver registros no banco de dados -->
                     <tr>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
+                        <td colspan="5">Nenhum cliente encontrado.</td>
                     </tr>
                         <?php    
                     }
