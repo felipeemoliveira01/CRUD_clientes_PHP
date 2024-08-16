@@ -30,6 +30,7 @@ if (isset($_POST['btn_atualizar'])) {
 
     // Verifica se todos os campos obrigatórios foram preenchidos e se o email é válido
     if (!empty($nome) && !empty($sobrenome) && isset($idade) && !empty($email)) {
+        if(ctype_alpha($nome) && ctype_alpha($sobrenome)){
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             // Verifica se o e-mail já está registrado para outro cliente
             $sql_email_check = "SELECT id FROM clientes WHERE id != '$id' AND email = '$email'";
@@ -57,6 +58,11 @@ if (isset($_POST['btn_atualizar'])) {
         } else {
             // Se o email for inválido, define uma mensagem de erro na sessão e redireciona para a página principal
             $_SESSION['msg'] = "Erro ao atualizar, email inválido";
+            header('Location: ../index.php?error');
+        }
+        }else{
+             // Se o nome ou sobrenome forem inválidos, define uma mensagem de erro na sessão e redireciona para a página principal
+            $_SESSION['msg'] = "Erro ao atualizar, nome ou sobrenome inválido";
             header('Location: ../index.php?error');
         }
     } else {
