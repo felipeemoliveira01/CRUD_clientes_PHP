@@ -23,38 +23,46 @@ if (isset($_POST['btn_cadastrar'])) {
 
     // Verifica se todos os campos estão preenchidos corretamente
     if (!empty($nome) && !empty($sobrenome) && isset($idade) && !empty($email)) {
-        // Verifica se o e-mail é válido
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            // Verifica se o e-mail já existe no banco de dados
-            $sql_email_check = "SELECT id FROM clientes WHERE email = '$email'";
-            $sql_email_result = mysqli_query($conect, $sql_email_check);
-
-            if (mysqli_num_rows($sql_email_result) > 0) {
-                // Se o e-mail já existir, define uma mensagem de erro e redireciona
-                $_SESSION['msg'] = "Erro: Email já cadastrado para outro cliente";
-                header('Location: ../index.php?error');
-            } else {
-                // Monta a query SQL para inserir os dados no banco de dados
-                $sql = "INSERT INTO clientes (nome, sobrenome, idade, email) VALUES ('$nome', '$sobrenome', '$idade', '$email')";
-                
-                // Executa a query e verifica se a inserção foi bem-sucedida
-                if (mysqli_query($conect, $sql)) {
-                    // Define mensagem de sucesso na sessão
-                    $_SESSION['msg'] = "Cadastro feito com sucesso";
-                    // Redireciona para a página inicial com parâmetro de sucesso
-                    header('Location: ../index.php?sucesso');
-                } else {
-                    // Define mensagem de erro na sessão
-                    $_SESSION['msg'] = "Erro ao cadastrar";
-                    // Redireciona para a página inicial com parâmetro de erro
+        // Verifica se o nome e o sobrenome contêm apenas letras
+        if(ctype_alpha($nome) && ctype_alpha($sobrenome)) {
+            // Verifica se o e-mail é válido
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                // Verifica se o e-mail já existe no banco de dados
+                $sql_email_check = "SELECT id FROM clientes WHERE email = '$email'";
+                $sql_email_result = mysqli_query($conect, $sql_email_check);
+    
+                if (mysqli_num_rows($sql_email_result) > 0) {
+                    // Se o e-mail já existir, define uma mensagem de erro e redireciona
+                    $_SESSION['msg'] = "Erro: Email já cadastrado para outro cliente";
                     header('Location: ../index.php?error');
+                } else {
+                    // Monta a query SQL para inserir os dados no banco de dados
+                    $sql = "INSERT INTO clientes (nome, sobrenome, idade, email) VALUES ('$nome', '$sobrenome', '$idade', '$email')";
+                    
+                    // Executa a query e verifica se a inserção foi bem-sucedida
+                    if (mysqli_query($conect, $sql)) {
+                        // Define mensagem de sucesso na sessão
+                        $_SESSION['msg'] = "Cadastro feito com sucesso";
+                        // Redireciona para a página inicial com parâmetro de sucesso
+                        header('Location: ../index.php?sucesso');
+                    } else {
+                        // Define mensagem de erro na sessão
+                        $_SESSION['msg'] = "Erro ao cadastrar";
+                        // Redireciona para a página inicial com parâmetro de erro
+                        header('Location: ../index.php?error');
+                    }
                 }
+            } else {
+                // Define mensagem de erro de e-mail inválido na sessão
+                $_SESSION['msg'] = "E-mail inválido";
+                // Redireciona para a página inicial com parâmetro de erro de e-mail
+                header('Location: ../index.php?error_email');
             }
         } else {
-            // Define mensagem de erro de e-mail inválido na sessão
-            $_SESSION['msg'] = "E-mail inválido";
-            // Redireciona para a página inicial com parâmetro de erro de e-mail
-            header('Location: ../index.php?error_email');
+            // Define mensagem de erro de nome ou sobrenome inválido na sessão
+            $_SESSION['msg'] = "Nome ou sobrenome são inválidos";
+            // Redireciona para a página inicial com parâmetro de erro
+            header('Location: ../index.php?error_fields');
         }
     } else {
         // Define mensagem de erro de campos não preenchidos corretamente na sessão
@@ -62,5 +70,6 @@ if (isset($_POST['btn_cadastrar'])) {
         // Redireciona para a página inicial com parâmetro de erro de campos
         header('Location: ../index.php?error_fields');
     }
+    
 }
 ?>
